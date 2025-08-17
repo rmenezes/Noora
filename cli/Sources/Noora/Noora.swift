@@ -362,6 +362,28 @@ public protocol Noorable {
     /// - Parameter encoder: The encoder to use for encoding the item.
     /// - Throws: An error if the object cannot be encoded to JSON.
     func json(_ item: some Codable, encoder: JSONEncoder) throws
+    
+    /// Renders markdown content to the terminal with styling
+    /// - Parameters:
+    ///   - content: The markdown content to render
+    ///   - style: The style configuration for rendering
+    ///   - renderer: A rendering interface that holds the UI state.
+    func markdown(
+        _ content: String,
+        style: MarkdownStyle,
+        renderer: Rendering
+    )
+    
+    /// Renders a markdown file to the terminal with styling
+    /// - Parameters:
+    ///   - path: The path to the markdown file
+    ///   - style: The style configuration for rendering
+    ///   - renderer: A rendering interface that holds the UI state.
+    func markdownFile(
+        path: String,
+        style: MarkdownStyle,
+        renderer: Rendering
+    ) throws
 }
 
 // swiftlint:disable:next type_body_length
@@ -767,6 +789,39 @@ public class Noora: Noorable {
             passthrough(text, pipeline: .output)
         }
     }
+    
+    public func markdown(
+        _ content: String,
+        style: MarkdownStyle,
+        renderer: Rendering
+    ) {
+        MarkdownComponent(
+            content: content,
+            style: style,
+            theme: theme,
+            terminal: terminal,
+            renderer: renderer,
+            standardPipelines: standardPipelines,
+            logger: logger
+        ).run()
+    }
+    
+    public func markdownFile(
+        path: String,
+        style: MarkdownStyle,
+        renderer: Rendering
+    ) throws {
+        let markdown = try MarkdownComponent.fromFile(
+            path: path,
+            style: style,
+            theme: theme,
+            terminal: terminal,
+            renderer: renderer,
+            standardPipelines: standardPipelines,
+            logger: logger
+        )
+        markdown.run()
+    }
 
     /// Helper method to convert simple string arrays to TableData
     private func createTableData(headers: [String], rows: [[String]]) -> TableData {
@@ -1098,5 +1153,21 @@ extension Noorable {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.dateEncodingStrategy = .iso8601
         try json(item, encoder: encoder)
+    }
+    
+    public func markdown(
+        _ content: String,
+        style: MarkdownStyle = .default,
+        renderer: Rendering = Renderer()
+    ) {
+        markdown(content, style: style, renderer: renderer)
+    }
+    
+    public func markdownFile(
+        path: String,
+        style: MarkdownStyle = .default,
+        renderer: Rendering = Renderer()
+    ) throws {
+        try markdownFile(path: path, style: style, renderer: renderer)
     }
 }

@@ -17,6 +17,7 @@ struct ExamplesCLI: AsyncParsableCommand {
             ProgressBarStepCommand.self,
             InfoCommand.self,
             TableCommand.self,
+            MarkdownCommand.self,
         ]
     )
 }

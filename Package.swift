@@ -24,6 +24,7 @@ let package = Package(
         ),
         .package(url: "https://github.com/apple/swift-log", .upToNextMajor(from: "1.6.4")),
         .package(url: "https://github.com/tuist/path", .upToNextMinor(from: "0.3.8")),
+        .package(url: "https://github.com/swiftlang/swift-markdown", .upToNextMajor(from: "0.5.0")),
     ],
     targets: [
         .executableTarget(
@@ -39,6 +40,7 @@ let package = Package(
                 "Rainbow",
                 .product(name: "Logging", package: "swift-log"),
                 .product(name: "Path", package: "path"),
+                .product(name: "Markdown", package: "swift-markdown"),
             ],
             path: "cli/Sources/Noora",
             swiftSettings: [

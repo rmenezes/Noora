@@ -220,6 +220,22 @@
         public func format(_ terminalText: TerminalText) -> String {
             noora.format(terminalText)
         }
+        
+        public func markdown(
+            _ content: String,
+            style: MarkdownStyle,
+            renderer: Rendering
+        ) {
+            noora.markdown(content, style: style, renderer: renderer)
+        }
+        
+        public func markdownFile(
+            path: String,
+            style: MarkdownStyle,
+            renderer: Rendering
+        ) throws {
+            try noora.markdownFile(path: path, style: style, renderer: renderer)
+        }
 
         public func textPrompt(
             title: TerminalText?,
